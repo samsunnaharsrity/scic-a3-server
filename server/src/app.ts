@@ -1,14 +1,28 @@
+
 import express from "express";
 import cors from "cors";
-import exploreRoute from "./routes/explore.route";
 import reviewRoute from "./routes/review.route";
 import commentRoute from "./routes/comment.route";
 import saveRoutes from "./routes/saveRoutes";
+import stayRoute from "./routes/stay.route";
+import exploreRoute from "./routes/explore.route";
+import userRoute from "./routes/user.route";
+import adminRoute from "./routes/admin.route";
+import bookingsRoute from "./routes/bookings.route";
 
 
-console.log("app.ts loaded");
+
+
+
+// console.log("app.ts loaded");
 
 const app = express();
+
+
+app.use((req, res, next) => {
+  console.log(">>> INCOMING REQUEST:", req.method, req.originalUrl);
+  next();
+});
 
 app.use(cors());
 app.use(express.json());
@@ -16,25 +30,73 @@ app.use(express.json());
 
 // Explore Routes
 app.use("/api/explore", exploreRoute);
+// console.log("Explore Route Registered");
 
-console.log("Explore Route Registered");
 
 app.use("/api/reviews", reviewRoute);
+// console.log("Review Route Registered");
 
 
 
 app.use("/api/comments", commentRoute);
+// console.log("Comment Route Registered");
 
 
 app.use("/api/save", saveRoutes);
+// console.log("Save Route Registered");
+
+// Stay Routes
+app.use("/api/stays", stayRoute);
+// console.log("Stay Route Registered");
+
+
+
+// console.log("adminRoute =", adminRoute);
+
+// admin route
+app.use("/api/admin", adminRoute);
+// console.log("Admin Route Registered");
+
+
+
+console.log("userRoute type:", typeof userRoute);
+console.log("userRoute stack length:", (userRoute as any)?.stack?.length);
+// user profile route
+app.use("/api/users", userRoute);
+// console.log("user Route Registered");
+
+
+
+// bookings route
+app.use("/api/bookings", bookingsRoute);
+
+
 
 // Hello Route
-app.get("/hello", (req, res) => {
+app.get("/api/hello", (req, res) => {
   res.send("Hello");
 });
 
+// console.log("Hello Route Registered");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Root Route
-app.get("/", (req, res) => {
+app.get("/api", (req, res) => {
   res.send("StudyNook API Running...");
 });
 

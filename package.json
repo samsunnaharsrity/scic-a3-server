@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "nodemon --exec tsx src/server.ts",
-    "build": "next build",
+"dev": "nodemon --exec tsx --ext ts,json src/server.ts" , 
+"build": "next build",
     "start": "next start",
     "lint": "eslint"
   },

@@ -1,6 +1,47 @@
 import { Request, Response } from "express";
 import { getDB } from "../config/mongodb";
 
+interface UserParams {
+  email: string;
+}
+
+export const getReviewsByUser = async (
+  req: Request<UserParams>,
+  res: Response
+) => {
+  try {
+    const db = getDB();
+
+    const { email } = req.params;
+
+    const reviews = await db
+      .collection("reviews")
+      .find({
+        userEmail: decodeURIComponent(email),
+      })
+      .sort({
+        createdAt: -1,
+      })
+      .toArray();
+
+    return res.json({
+      success: true,
+      reviews,
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch user reviews",
+    });
+  }
+};
+
+
+
+
+
 export const getReviewsByPlace = async (
   req: Request,
   res: Response
@@ -13,34 +54,45 @@ export const getReviewsByPlace = async (
       .find({
         placeId: req.params.placeId,
       })
-      .sort({ createdAt: -1 })
+      .sort({
+        createdAt: -1,
+      })
       .toArray();
 
     const total = reviews.length;
 
     const average =
       total > 0
-        ? (
-            reviews.reduce(
-              (sum, item) => sum + item.rating,
-              0
-            ) / total
-          ).toFixed(1)
+        ? Number(
+            (
+              reviews.reduce(
+                (sum: number, item: any) => sum + item.rating,
+                0
+              ) / total
+            ).toFixed(1)
+          )
         : 0;
 
     res.json({
       success: true,
       totalReviews: total,
-      averageRating: Number(average),
+      averageRating: average,
       reviews,
     });
-  } catch (err) {
+  } catch (error) {
+    console.log(error);
+
     res.status(500).json({
       success: false,
       message: "Failed to fetch reviews",
     });
   }
 };
+
+
+
+
+
 
 export const addReview = async (
   req: Request,

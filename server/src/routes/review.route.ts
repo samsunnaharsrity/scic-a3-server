@@ -1,10 +1,26 @@
 import { Router } from "express";
-import { addReview, getReviewsByPlace } from "../controllers/review.controller";
+import { addReview, getReviewsByPlace, getReviewsByUser } from "../controllers/review.controller";
+
 
 
 const router = Router();
 
-router.get("/:placeId", getReviewsByPlace);
-router.post("/", addReview);
+router.get(
+ "/user/:email",
+ getReviewsByUser
+);
+
+
+router.get(
+ "/place/:placeId",
+ getReviewsByPlace
+);
+
+
+router.post(
+ "/",
+ addReview
+);
+
 
 export default router;
