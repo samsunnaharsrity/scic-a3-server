@@ -11,7 +11,6 @@ export const toggleSaveItem = async (req: Request, res: Response) => {
       return res.status(400).json({ success: false, message: "Missing fields" });
     }
 
-
     const existing = await db.collection("saved_items").findOne({
       placeId: placeId.toString(),
       userEmail,
@@ -22,29 +21,23 @@ export const toggleSaveItem = async (req: Request, res: Response) => {
       return res.json({ success: true, isSaved: false });
     }
 
-   
     let query: any = { _id: placeId };
     if (ObjectId.isValid(placeId)) {
-      query = {
-        $or: [
-          { _id: new ObjectId(placeId) },
-          { _id: placeId }
-        ]
-      };
+      query = { _id: new ObjectId(placeId) };
     }
 
-    const place = await db.collection("explore").findOne(query);
+  
+    const place = await db.collection("explorePlaces").findOne(query);
 
     if (!place) {
-      return res.status(404).json({ 
+      return res.status(400).json({ 
         success: false, 
-        message: `Explore'${placeId}' not found` 
+        message: `Place with ID '${placeId}' does not exist in explorePlaces collection.` 
       });
     }
 
-
     const finalImageUrl = place.image || place.imageUrl || "";
-    const finalPlaceName = place.title || "Unknown Place";
+    const finalPlaceName = place.title || place.placeName || "Unknown Place";
 
     await db.collection("saved_items").insertOne({
       placeId: placeId.toString(),
@@ -59,13 +52,10 @@ export const toggleSaveItem = async (req: Request, res: Response) => {
       isSaved: true,
     });
   } catch (err) {
-    console.error(err);
+    console.error("Error in toggleSaveItem:", err);
     return res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
-
-
-
 
 
 export const getSavedItems = async (req: Request, res: Response) => {
@@ -73,14 +63,23 @@ export const getSavedItems = async (req: Request, res: Response) => {
     const db = (await connectDB()) as Db;
     const { userEmail } = req.params;
 
+    if (!userEmail) {
+      return res.status(400).json({ success: false, message: "User email is required" });
+    }
+
+
     const savedItems = await db
       .collection("saved_items")
       .find({ userEmail })
       .sort({ savedAt: -1 })
       .toArray();
 
-    return res.status(200).json({ success: true, savedItems });
+    return res.status(200).json({ 
+      success: true, 
+      savedItems 
+    });
   } catch (error: any) {
-    return res.status(500).json({ success: false, message: "Failed to fetch items" });
+    console.error("Error in getSavedItems:", error);
+    return res.status(500).json({ success: false, message: "Failed to fetch saved items" });
   }
 };

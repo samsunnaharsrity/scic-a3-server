@@ -43,7 +43,7 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
   try {
     const db = await connectDB();
-    const { email, placeId, placeName, image, date, price } = req.body;
+    const { email, placeId, placeName, image, location, date, price } = req.body;
 
     if (!email || !placeName || !date || !price) {
       return res.status(400).json({
@@ -59,6 +59,7 @@ router.post("/", async (req, res) => {
       placeId,
       placeName,
       image: image || "",
+      location: location || "Not Specified",
       date,
       price,
       status: "pending",

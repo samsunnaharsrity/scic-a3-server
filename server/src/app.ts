@@ -3,12 +3,12 @@ import express from "express";
 import cors from "cors";
 import reviewRoute from "./routes/review.route";
 import commentRoute from "./routes/comment.route";
-import saveRoutes from "./routes/saveRoutes";
 import stayRoute from "./routes/stay.route";
 import exploreRoute from "./routes/explore.route";
 import userRoute from "./routes/user.route";
 import adminRoute from "./routes/admin.route";
 import bookingsRoute from "./routes/bookings.route";
+import saveRoute from "./routes/save.route";
 
 
 
@@ -42,7 +42,7 @@ app.use("/api/comments", commentRoute);
 // console.log("Comment Route Registered");
 
 
-app.use("/api/save", saveRoutes);
+app.use("/api/save", saveRoute);
 // console.log("Save Route Registered");
 
 // Stay Routes
