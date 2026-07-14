@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { connectDB } from "../config/mongodb";
 import { getUserDashboard } from "../controllers/userDashboard.controller";
+import { createUser } from "../controllers/user.controller";
 
 
 
@@ -16,6 +17,9 @@ router.get("/test", (req, res) => {
     message: "User route working",
   });
 });
+
+router.post("/", createUser);
+
 
 router.get("/dashboard", getUserDashboard);
 
