@@ -215,4 +215,24 @@ router.delete("/stays/:id", async (req, res) => {
   }
 });
 
+
+
+// 5. POST Admin Settings
+// router.post("/settings", async (req, res) => {
+//   console.log(">>> Settings POST hit, Body:", req.body); 
+//   try {
+//     const db = await connectDB();
+//     const result = await db.collection("admin_settings").updateOne(
+//       { type: "general" },
+//       { $set: req.body },
+//       { upsert: true }
+//     );
+//     res.status(200).json({ success: true });
+//   } catch (err) {
+//     console.error(">>> Server Side Error:", err); 
+//     res.status(500).json({ success: false, message: "Database failure" });
+//   }
+// });
+
+
 export default router;

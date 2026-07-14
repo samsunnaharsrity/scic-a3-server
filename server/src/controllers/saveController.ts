@@ -11,6 +11,7 @@ export const toggleSaveItem = async (req: Request, res: Response) => {
       return res.status(400).json({ success: false, message: "Missing fields" });
     }
 
+    // ১. চেক করুন এটি আগে থেকেই সেভ করা আছে কিনা
     const existing = await db.collection("saved_items").findOne({
       placeId: placeId.toString(),
       userEmail,
@@ -21,36 +22,32 @@ export const toggleSaveItem = async (req: Request, res: Response) => {
       return res.json({ success: true, isSaved: false });
     }
 
-    let query: any = { _id: placeId };
+    // ২. সঠিক কুয়েরি লজিক: 
+    // যেহেতু আপনার ডাটাবেসে _id টি একটি ObjectId, তাই অবশ্যই ObjectId ব্যবহার করতে হবে।
+    let place = null;
     if (ObjectId.isValid(placeId)) {
-      query = { _id: new ObjectId(placeId) };
-    }
-
-  
-    const place = await db.collection("explorePlaces").findOne(query);
-
-    if (!place) {
-      return res.status(400).json({ 
-        success: false, 
-        message: `Place with ID '${placeId}' does not exist in explorePlaces collection.` 
+      place = await db.collection("explorePlaces").findOne({ 
+        _id: new ObjectId(placeId) 
       });
     }
 
-    const finalImageUrl = place.image || place.imageUrl || "";
-    const finalPlaceName = place.title || place.placeName || "Unknown Place";
+    if (!place) {
+      return res.status(404).json({ 
+        success: false, 
+        message: "Place not found in explorePlaces collection." 
+      });
+    }
 
+    // ৩. ডাটাবেসে সেভ করার সময় আপনার ডকুমেন্টের কী (key) গুলো ব্যবহার করুন
     await db.collection("saved_items").insertOne({
       placeId: placeId.toString(),
       userEmail,
-      placeName: finalPlaceName,
-      imageUrl: finalImageUrl,
+      placeName: place.title, // আপনার ডকুমেন্টে title আছে
+      imageUrl: place.image,  // আপনার ডকুমেন্টে image আছে
       savedAt: new Date(),
     });
 
-    return res.json({
-      success: true,
-      isSaved: true,
-    });
+    return res.json({ success: true, isSaved: true });
   } catch (err) {
     console.error("Error in toggleSaveItem:", err);
     return res.status(500).json({ success: false, message: "Internal Server Error" });

@@ -9,6 +9,7 @@ import userRoute from "./routes/user.route";
 import adminRoute from "./routes/admin.route";
 import bookingsRoute from "./routes/bookings.route";
 import saveRoute from "./routes/save.route";
+import settingsRoute from "./routes/settings.route";
 
 
 
@@ -70,6 +71,13 @@ app.use("/api/users", userRoute);
 // bookings route
 app.use("/api/bookings", bookingsRoute);
 
+
+
+// settings
+app.use("/api/settings", (req, res, next) => {
+  console.log("🔥 SETTINGS MIDDLEWARE HIT");
+  next();
+}, settingsRoute);
 
 
 // Hello Route
