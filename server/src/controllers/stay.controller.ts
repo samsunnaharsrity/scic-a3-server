@@ -6,7 +6,12 @@ import { connectDB } from "../config/mongodb";
 export const getAllStays = async (req: Request, res: Response) => {
   try {
     const db = (await connectDB()) as Db;
-    const stays = await db.collection("explorePlaces").find().sort({ _id: -1 }).toArray();
+
+    const stays = await db
+      .collection("explorePlaces")
+      .find()
+      .sort({ createdAt: -1 })
+      .toArray();
 
     return res.status(200).json({
       success: true,
@@ -14,7 +19,10 @@ export const getAllStays = async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ success: false, message: "Failed to fetch stays" });
+    return res.status(500).json({
+      success: false,
+      message: "Failed to fetch stays",
+    });
   }
 };
 
@@ -28,7 +36,7 @@ export const getStayById = async (req: Request<{ id: string }>, res: Response) =
       return res.status(400).json({ success: false, message: "Invalid ID format" });
     }
 
-    const stay = await db.collection("stays").findOne({ _id: new ObjectId(id) });
+    const stay = await db.collection("explorePlaces").findOne({ _id: new ObjectId(id) });
 
     if (!stay) {
       return res.status(404).json({ success: false, message: "Stay not found" });
@@ -65,11 +73,28 @@ export const updateStay = async (req: Request<{ id: string }>, res: Response) =>
       return res.status(400).json({ success: false, message: "Invalid ID format" });
     }
 
-    const { title, location, price, type, image } = req.body;
+    const {
+      title,
+      location,
+      price,
+      type,
+      image,
+      description,
+    } = req.body;
 
     const result = await db.collection("explorePlaces").updateOne(
       { _id: new ObjectId(id) },
-      { $set: { title, location, price: Number(price), type, image } }
+      {
+        $set: {
+          title,
+          location,
+          price: Number(price),
+          type,
+          image,
+          description,
+          updatedAt: new Date(),
+        },
+      }
     );
 
     if (result.matchedCount === 0) {

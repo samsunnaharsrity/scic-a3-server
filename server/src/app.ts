@@ -13,6 +13,7 @@ import settingsRoute from "./routes/settings.route";
 import userDashboardRoute from "./routes/userDashboard.route";
 import adminBookingRoute from "./routes/adminBooking.route";
 import adminAnalyticsRoute from "./routes/adminAnalytics.route";
+import adminDashboardRoute from "./routes/adminDashboard.route";
 
 
 
@@ -90,6 +91,9 @@ app.use("/api/admin/bookings", adminBookingRoute);
 
 
 app.use("/api/admin", adminAnalyticsRoute);
+
+
+app.use("/api/admin", adminDashboardRoute);
 
 // Hello Route
 app.get("/api/hello", (req, res) => {

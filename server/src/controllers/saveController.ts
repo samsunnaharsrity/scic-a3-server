@@ -11,7 +11,7 @@ export const toggleSaveItem = async (req: Request, res: Response) => {
       return res.status(400).json({ success: false, message: "Missing fields" });
     }
 
-    // ১. চেক করুন এটি আগে থেকেই সেভ করা আছে কিনা
+    
     const existing = await db.collection("saved_items").findOne({
       placeId: placeId.toString(),
       userEmail,
@@ -22,8 +22,7 @@ export const toggleSaveItem = async (req: Request, res: Response) => {
       return res.json({ success: true, isSaved: false });
     }
 
-    // ২. সঠিক কুয়েরি লজিক: 
-    // যেহেতু আপনার ডাটাবেসে _id টি একটি ObjectId, তাই অবশ্যই ObjectId ব্যবহার করতে হবে।
+   
     let place = null;
     if (ObjectId.isValid(placeId)) {
       place = await db.collection("explorePlaces").findOne({ 
@@ -38,12 +37,12 @@ export const toggleSaveItem = async (req: Request, res: Response) => {
       });
     }
 
-    // ৩. ডাটাবেসে সেভ করার সময় আপনার ডকুমেন্টের কী (key) গুলো ব্যবহার করুন
+ 
     await db.collection("saved_items").insertOne({
       placeId: placeId.toString(),
       userEmail,
-      placeName: place.title, // আপনার ডকুমেন্টে title আছে
-      imageUrl: place.image,  // আপনার ডকুমেন্টে image আছে
+      placeName: place.title, 
+      imageUrl: place.image, 
       savedAt: new Date(),
     });
 

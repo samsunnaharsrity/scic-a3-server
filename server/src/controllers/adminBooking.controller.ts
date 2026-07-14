@@ -3,7 +3,7 @@ import { ObjectId } from "mongodb";
 import { connectDB } from "../config/mongodb";
 
 export const updateBookingStatus = async (
-  req: Request,
+  req: Request<{ id: string }>,
   res: Response
 ) => {
   try {
