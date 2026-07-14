@@ -6,7 +6,7 @@ import { connectDB } from "../config/mongodb";
 export const getAllStays = async (req: Request, res: Response) => {
   try {
     const db = (await connectDB()) as Db;
-    const stays = await db.collection("stays").find().sort({ _id: -1 }).toArray();
+    const stays = await db.collection("explorePlaces").find().sort({ _id: -1 }).toArray();
 
     return res.status(200).json({
       success: true,
@@ -18,7 +18,7 @@ export const getAllStays = async (req: Request, res: Response) => {
   }
 };
 
-// ২. Get Stay By ID
+//  Get Stay By ID
 export const getStayById = async (req: Request<{ id: string }>, res: Response) => {
   try {
     const db = (await connectDB()) as Db;
@@ -41,13 +41,13 @@ export const getStayById = async (req: Request<{ id: string }>, res: Response) =
   }
 };
 
-// ৩. Create New Stay (Admin)
+// Create New Stay (Admin)
 export const createStay = async (req: Request, res: Response) => {
   try {
     const db = (await connectDB()) as Db;
-    const result = await db.collection("stays").insertOne(req.body);
+    const result = await db.collection("explorePlaces").insertOne(req.body);
     
-    const newStay = await db.collection("stays").findOne({ _id: result.insertedId });
+    const newStay = await db.collection("explorePlaces").findOne({ _id: result.insertedId });
     return res.status(201).json(newStay);
   } catch (error) {
     console.error(error);
@@ -67,7 +67,7 @@ export const updateStay = async (req: Request<{ id: string }>, res: Response) =>
 
     const { title, location, price, type, image } = req.body;
 
-    const result = await db.collection("stays").updateOne(
+    const result = await db.collection("explorePlaces").updateOne(
       { _id: new ObjectId(id) },
       { $set: { title, location, price: Number(price), type, image } }
     );
@@ -76,7 +76,7 @@ export const updateStay = async (req: Request<{ id: string }>, res: Response) =>
       return res.status(404).json({ success: false, message: "Stay not found" });
     }
 
-    const updatedStay = await db.collection("stays").findOne({ _id: new ObjectId(id) });
+    const updatedStay = await db.collection("explorePlaces").findOne({ _id: new ObjectId(id) });
     return res.status(200).json(updatedStay);
   } catch (error) {
     console.error(error);
@@ -94,7 +94,7 @@ export const deleteStay = async (req: Request<{ id: string }>, res: Response) =>
       return res.status(400).json({ success: false, message: "Invalid ID format" });
     }
 
-    const result = await db.collection("stays").deleteOne({ _id: new ObjectId(id) });
+    const result = await db.collection("explorePlaces").deleteOne({ _id: new ObjectId(id) });
 
     if (result.deletedCount === 0) {
       return res.status(404).json({ success: false, message: "Stay not found" });

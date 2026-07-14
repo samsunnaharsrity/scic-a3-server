@@ -10,6 +10,9 @@ import adminRoute from "./routes/admin.route";
 import bookingsRoute from "./routes/bookings.route";
 import saveRoute from "./routes/save.route";
 import settingsRoute from "./routes/settings.route";
+import userDashboardRoute from "./routes/userDashboard.route";
+import adminBookingRoute from "./routes/adminBooking.route";
+import adminAnalyticsRoute from "./routes/adminAnalytics.route";
 
 
 
@@ -21,7 +24,6 @@ const app = express();
 
 
 app.use((req, res, next) => {
-  console.log(">>> INCOMING REQUEST:", req.method, req.originalUrl);
   next();
 });
 
@@ -63,7 +65,7 @@ app.use("/api/admin", adminRoute);
 console.log("userRoute type:", typeof userRoute);
 console.log("userRoute stack length:", (userRoute as any)?.stack?.length);
 // user profile route
-app.use("/api/users", userRoute);
+app.use("/api/user", userRoute);
 // console.log("user Route Registered");
 
 
@@ -75,10 +77,19 @@ app.use("/api/bookings", bookingsRoute);
 
 // settings
 app.use("/api/settings", (req, res, next) => {
-  console.log("🔥 SETTINGS MIDDLEWARE HIT");
   next();
 }, settingsRoute);
 
+
+app.use("/api/user", userDashboardRoute);
+
+
+app.use("/api/admin/bookings", adminBookingRoute);
+
+
+
+
+app.use("/api/admin", adminAnalyticsRoute);
 
 // Hello Route
 app.get("/api/hello", (req, res) => {

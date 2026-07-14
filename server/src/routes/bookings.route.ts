@@ -54,18 +54,20 @@ router.post("/", async (req, res) => {
 
     console.log("CREATE BOOKING ROUTE HIT FOR:", email);
 
-    const newBooking = {
-      email,
-      placeId,
-      placeName,
-      image: image || "",
-      location: location || "Not Specified",
-      date,
-      price,
-      status: "pending",
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
+const newBooking = {
+  email,
+  placeId,
+  placeName,
+  image:
+    image?.trim() ||
+    "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1200&auto=format&fit=crop&q=80",
+  location: location || "Not Specified",
+  date,
+  price,
+  status: "pending",
+  createdAt: new Date(),
+  updatedAt: new Date(),
+};
 
     const result = await db.collection("bookings").insertOne(newBooking);
 

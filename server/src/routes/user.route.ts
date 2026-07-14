@@ -1,5 +1,6 @@
 import { Router } from "express";
-import { connectDB } from "../config/mongodb"; // আপনার ডিরেক্টরি অনুযায়ী পাথ চেক করে নিবেন
+import { connectDB } from "../config/mongodb";
+import { getUserDashboard } from "../controllers/userDashboard.controller";
 
 
 
@@ -15,6 +16,9 @@ router.get("/test", (req, res) => {
     message: "User route working",
   });
 });
+
+router.get("/dashboard", getUserDashboard);
+
 
 // GET USER PROFILE BY EMAIL
 router.get("/:email", async (req, res) => {
@@ -37,7 +41,7 @@ router.get("/:email", async (req, res) => {
 
     res.status(200).json({
       success: true,
-      data: user, // explorePlaces এর মতো Response Structure সামঞ্জস্যপূর্ণ রাখা হলো
+      data: user, 
     });
   } catch (error) {
     console.error("Error fetching user:", error);

@@ -3,7 +3,7 @@ import { connectDB } from "../config/mongodb";
 
 const router = Router();
 
-console.log("✅ settings.route.ts loaded");
+// console.log("✅ settings.route.ts loaded");
 
 // GET SETTINGS
 router.get("/", async (req, res) => {
