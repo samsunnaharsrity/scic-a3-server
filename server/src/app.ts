@@ -24,9 +24,9 @@ import adminDashboardRoute from "./routes/adminDashboard.route";
 const app = express();
 
 
-app.use((req, res, next) => {
-  next();
-});
+// app.use((req, res, next) => {
+//   next();
+// });
 
 app.use(
   cors({
@@ -50,7 +50,7 @@ app.use(
   })
 );
 
-
+app.options("*", cors());
 app.use(express.json());
 
 
