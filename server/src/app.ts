@@ -31,13 +31,25 @@ app.use((req, res, next) => {
 app.use(
   cors({
     origin: [
-      "http://localhost:3000",
       "https://scic-a3.vercel.app",
+      "http://localhost:3000"
     ],
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     credentials: true,
+    methods: [
+      "GET",
+      "POST",
+      "PUT",
+      "PATCH",
+      "DELETE",
+      "OPTIONS"
+    ],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization"
+    ]
   })
 );
+
 
 app.use(express.json());
 
